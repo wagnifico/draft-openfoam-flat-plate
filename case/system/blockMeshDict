@@ -18,35 +18,40 @@ L      1; // plate length
 alpha  0.785398; // plate angle, rad
 //alpha  0.0; // plate angle, rad
 
-Lin    1; // upstream length
-Lout   1; // downstream length
-Ly     3; // domain height
-Lz     1; // domain thickness
+ref           40; // refinement expansiong factor for close to plate
+inv_ref       #eval{ 1.0/$ref} ;
+
+L_upstream    7; // upstream length
+L_downstream  10; // downstream length
+Ly            10; // domain height
+Lz            1; // domain thickness
 
 // Divisions in x/y/z directions. Can be unequal.
-nx   20;
-ny   20;
-nz   1;
+nx_upstream    50;
+nx_center      100;
+nx_downstream  75;
+ny             50;
+nz             1;
 
-x_upstream      #eval{ $Lin }; // x of top of plate
+x_upstream      #eval{ $L_upstream }; // x of top of plate
 y_upstream      #eval{ $Ly/2 + $L*sin($alpha)/2 }; // y of upstream of plate
 
 x_downstream    #eval{ $x_upstream + $L*cos($alpha) }; // x of bottom of plate
 y_downstream    #eval{ $Ly/2 - $L*sin($alpha)/2 }; // y of bottom of plate
 
-Lx         #eval{ $x_downstream + $Lout }; // domain total length
+Lx         #eval{ $x_downstream + $L_downstream }; // domain total length
 
 vertices
 (
     // bottom-upstream block
     (0    0      0)
-    ($Lin 0      0)
-    ($Lin $y_upstream 0)
+    ($L_upstream 0      0)
+    ($L_upstream $y_upstream 0)
     (0    $y_upstream 0)
 
     (0    0      $Lz)
-    ($Lin 0      $Lz)
-    ($Lin $y_upstream $Lz)
+    ($L_upstream 0      $Lz)
+    ($L_upstream $y_upstream $Lz)
     (0    $y_upstream $Lz)
 
     // bottom-center block
@@ -85,17 +90,17 @@ vertices
 blocks
 (
     // bottom-upstream block
-    hex (0 1 2 3 4 5 6 7) ($nx $ny $nz) grading (1 1 1)
+    hex (0 1 2 3 4 5 6 7) ($nx_upstream $ny $nz) simpleGrading ($inv_ref $inv_ref 1)
     // bottom-center block
-    hex (1 8 9 2 5 10 11 6) ($nx $ny $nz) grading (1 1 1)
+    hex (1 8 9 2 5 10 11 6) ($nx_center $ny $nz) simpleGrading (1 $inv_ref 1)
     // bottom-donwstream- block
-    hex (8 12 13 9 10 14 15 11) ($nx $ny $nz) grading (1 1 1)
+    hex (8 12 13 9 10 14 15 11) ($nx_downstream $ny $nz) simpleGrading ($ref $inv_ref 1)
     // upper upstream block
-    hex (3 2 16 17 7 6 18 19) ($nx $ny $nz) grading (1 1 1)
+    hex (3 2 16 17 7 6 18 19) ($nx_upstream $ny $nz) simpleGrading ($inv_ref $ref 1)
     // upper-center block
-    hex (2 9 20 16 6 11 21 18) ($nx $ny $nz) grading (1 1 1)
+    hex (2 9 20 16 6 11 21 18) ($nx_center $ny $nz) simpleGrading (1 $ref 1)
     // upper-donwstream block
-    hex (9 13 22 20 11 15 23 21) ($nx $ny $nz) grading (1 1 1)
+    hex (9 13 22 20 11 15 23 21) ($nx_downstream $ny $nz) simpleGrading ($ref $ref 1)
 );
 
 edges
