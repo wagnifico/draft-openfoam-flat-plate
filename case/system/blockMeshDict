@@ -28,11 +28,11 @@ nx   10;
 ny   20;
 nz   1;
 
-y_upstream      #eval{ $Ly/2 + $L*sin($alpha)/2 }; // y of upstream of plate
 x_upstream      #eval{ $Lin }; // x of top of plate
+y_upstream      #eval{ $Ly/2 + $L*sin($alpha)/2 }; // y of upstream of plate
 
-y_downstream    #eval{ $Ly/2 - $L*sin($alpha)/2 }; // y of bottom of plate
 x_downstream    #eval{ $x_upstream + $L*cos($alpha) }; // x of bottom of plate
+y_downstream    #eval{ $Ly/2 - $L*sin($alpha)/2 }; // y of bottom of plate
 
 Lx         #eval{ $x_downstream + $Lout }; // domain total length
 
