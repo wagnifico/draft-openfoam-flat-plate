@@ -19,11 +19,14 @@ FoamFile
 // add small infinitesimal to define the searchable box
 box_thickness     0.001;
 
-box_start_x     #eval{ $x_upstream - $box_thickness/2 };
-box_start_y     #eval{ $y_upstream - $box_thickness/2 };
-box_start_z     #eval{ 0 - $box_thickness/2 };
-box_i_x         #eval{ $cos($alpha) };
-box_i_y         #eval{ -$sin($alpha) };
+box_start_x     #eval{ $x_upstream - $box_thickness/2. };
+box_start_y     #eval{ $y_upstream - $box_thickness/2. };
+box_start_z     #eval{ 0 - $box_thickness/2. };
+box_i_x         #eval{ cos($alpha_rad) };
+box_i_y         #eval{ -sin($alpha_rad) };
+
+box_L_x         #eval{ $L + $box_thickness };
+box_L_z         #eval{ $Lz + $box_thickness };
 
 actions
 (
@@ -39,9 +42,9 @@ actions
         {
             surfaceType searchableRotatedBox;
             origin      ($box_start_x $box_start_y $box_start_z);
-            e1          ($box_i_x $box_i_y 0);
-            e3          (0 0 1);
-            span        ($L $box_thickness $Lz );
+            e1          ($box_i_x $box_i_y 0.);
+            e3          (0. 0. 1.);
+            span        ($box_L_x $box_thickness $box_L_z );
         }
     }
 

@@ -14,9 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-L      1; // plate length
-alpha  0.785398; // plate angle, rad
-//alpha  0.0; // plate angle, rad
+L           1; // plate length
+alpha       15.0; // plate angle, deg
+alpha_rad   #eval{ degToRad($alpha) }; // plate angle, rad
 
 ref           40; // refinement expansiong factor for close to plate
 inv_ref       #eval{ 1.0/$ref} ;
@@ -34,12 +34,12 @@ ny             50;
 nz             1;
 
 x_upstream      #eval{ $L_upstream }; // x of top of plate
-y_upstream      #eval{ $Ly/2 + $L*sin($alpha)/2 }; // y of upstream of plate
+y_upstream      #eval{ $Ly/2 + $L*sin($alpha_rad)/2 }; // y of upstream of plate
 
-x_downstream    #eval{ $x_upstream + $L*cos($alpha) }; // x of bottom of plate
-y_downstream    #eval{ $Ly/2 - $L*sin($alpha)/2 }; // y of bottom of plate
+x_downstream    #eval{ $x_upstream + $L*cos($alpha_rad) }; // x of bottom of plate
+y_downstream    #eval{ $Ly/2 - $L*sin($alpha_rad)/2 }; // y of bottom of plate
 
-Lx         #eval{ $x_downstream + $L_downstream }; // domain total length
+Lx              #eval{ $x_downstream + $L_downstream }; // domain total length
 
 vertices
 (

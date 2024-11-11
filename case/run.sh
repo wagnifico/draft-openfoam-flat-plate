@@ -12,7 +12,6 @@ runApplication topoSet
 runApplication createBaffles -overwrite
 runApplication checkMesh
 
-
 runApplication $(getApplication)
 
 paraFoam -touch-all
