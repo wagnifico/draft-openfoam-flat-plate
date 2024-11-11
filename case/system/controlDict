@@ -18,16 +18,53 @@ application       simpleFoam;
 startFrom         startTime;
 startTime         0;
 stopAt            endTime;
-endTime           500;
+endTime           1000;
 deltaT            1;
 
 writeControl      timeStep;
-writeInterval     50;
+writeInterval     100;
 purgeWrite        0;
 writeFormat       ascii;
 writePrecision    6;
 writeCompression  off;
 
 runTimeModifiable true;
+
+
+
+functions
+{
+    forceCoeffs1
+    {
+        type            forceCoeffs;
+        libs            ("libforces.so");
+        writeControl    timeStep;
+        timeInterval    1;
+        log             yes;
+        patches         ("plate.*");
+        rho             rhoInf;
+        rhoInf          1;
+        CofR            (0 0 0);
+        liftDir         (0 1 0);
+        dragDir         (1 0 0);
+        pitchAxis       (0 1 0);
+        magUInf         10;
+        lRef            1.0;
+        Aref            1.0;
+    }
+
+    yPlus
+    {
+        type            yPlus;
+        libs            (fieldFunctionObjects);
+        patches         ("plate.*");
+        writeFields     yes;
+        writeControl    writeTime;
+    }
+
+
+}
+
+
 
 // ************************************************************************* //
