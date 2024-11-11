@@ -1,0 +1,135 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+alpha  0.785398; // plate angle, rad
+L      1; // plate length
+Lin    1; // upstream length
+Lout   1; // downstream length
+Ly     3; // domain height
+Lz     1; // domain thickness
+
+// Divisions in x/y/z directions. Can be unequal.
+nx   10;
+ny   20;
+nz   1;
+
+y_top      #eval{ $Ly/2 + $L*sin($alpha)/2 }; // y of top of plate
+x_top      #eval{ $Lin }; // x of top of plate
+
+y_bottom   #eval{ $Ly/2 - $L*sin($alpha)/2 }; // y of bottom of plate
+x_bottom   #eval{ $x_top + $L*cos($alpha) }; // x of bottom of plate
+
+Lx         #eval{ $x_bottom + $Lout }; // domain total length
+
+vertices
+(
+    // first block
+    (0    0      0)
+    ($Lin 0      0)
+    ($Lin $y_top 0)
+    (0    $y_top 0)
+
+    (0    0      $Lz)
+    ($Lin 0      $Lz)
+    ($Lin $y_top $Lz)
+    (0    $y_top $Lz)
+
+
+    ($x_bottom 0         0)
+    ($x_bottom $y_bottom 0)
+
+    ($x_bottom 0         $Lz)
+    ($x_bottom $y_bottom $Lz)
+
+
+    ($Lx 0         0)
+    ($Lx $y_bottom 0)
+
+    ($Lx 0         $Lz)
+    ($Lx $y_bottom $Lz)
+);
+
+blocks
+(
+    // upstream-bottom block
+    hex (0 1 2 3 4 5 6 7) ($nx $ny $nz) grading (1 1 1)
+    // center-bottom block
+    hex (1 8 9 2 5 10 11 6) ($nx $ny $nz) grading (1 1 1)
+    // donwstream-bottom block
+    hex (8 12 13 9 10 14 15 11) ($nx $ny $nz) grading (1 1 1)
+);
+
+edges
+(
+);
+
+faces
+(
+);
+
+boundary
+(
+    frontAndBack
+    {
+        type empty;
+        faces
+        (
+            (4 5 6 7)
+            (0 3 2 1)
+            (5 10 11 6)
+            (1 8 9 2)
+            (8 12 13 9)
+            (10 14 15 11)
+        );
+    }
+
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 4 7 3)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            //(2 6 5 1)
+            //(9 11 10 8)
+            (13 15 14 12)
+        );
+    }
+
+    topAndBottom
+    {
+        type patch;
+        faces
+        (
+            (3 7 6 2)
+            (1 5 4 0)
+            (2 6 9 11)
+            (5 8 10 1)
+            (9 13 15 11)
+            (8 12 14 10)
+        );
+    }
+);
+
+
+// ************************************************************************* //
