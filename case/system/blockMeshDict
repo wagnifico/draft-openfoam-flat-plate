@@ -14,8 +14,10 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-alpha  0.785398; // plate angle, rad
 L      1; // plate length
+alpha  0.785398; // plate angle, rad
+//alpha  0.0; // plate angle, rad
+
 Lin    1; // upstream length
 Lout   1; // downstream length
 Ly     3; // domain height
@@ -26,50 +28,74 @@ nx   10;
 ny   20;
 nz   1;
 
-y_top      #eval{ $Ly/2 + $L*sin($alpha)/2 }; // y of top of plate
-x_top      #eval{ $Lin }; // x of top of plate
+y_upstream      #eval{ $Ly/2 + $L*sin($alpha)/2 }; // y of upstream of plate
+x_upstream      #eval{ $Lin }; // x of top of plate
 
-y_bottom   #eval{ $Ly/2 - $L*sin($alpha)/2 }; // y of bottom of plate
-x_bottom   #eval{ $x_top + $L*cos($alpha) }; // x of bottom of plate
+y_downstream    #eval{ $Ly/2 - $L*sin($alpha)/2 }; // y of bottom of plate
+x_downstream    #eval{ $x_upstream + $L*cos($alpha) }; // x of bottom of plate
 
-Lx         #eval{ $x_bottom + $Lout }; // domain total length
+Lx         #eval{ $x_downstream + $Lout }; // domain total length
 
 vertices
 (
-    // first block
+    // bottom-upstream block
     (0    0      0)
     ($Lin 0      0)
-    ($Lin $y_top 0)
-    (0    $y_top 0)
+    ($Lin $y_upstream 0)
+    (0    $y_upstream 0)
 
     (0    0      $Lz)
     ($Lin 0      $Lz)
-    ($Lin $y_top $Lz)
-    (0    $y_top $Lz)
+    ($Lin $y_upstream $Lz)
+    (0    $y_upstream $Lz)
 
+    // bottom-center block
+    ($x_downstream 0         0)
+    ($x_downstream $y_downstream 0)
 
-    ($x_bottom 0         0)
-    ($x_bottom $y_bottom 0)
+    ($x_downstream 0         $Lz)
+    ($x_downstream $y_downstream $Lz)
 
-    ($x_bottom 0         $Lz)
-    ($x_bottom $y_bottom $Lz)
-
-
+    // bottom-donwstream block
     ($Lx 0         0)
-    ($Lx $y_bottom 0)
+    ($Lx $y_downstream 0)
 
     ($Lx 0         $Lz)
-    ($Lx $y_bottom $Lz)
+    ($Lx $y_downstream $Lz)
+    
+    // upper-upstream block
+    ($x_upstream $Ly    0)
+    (0      $Ly    0)
+
+    ($x_upstream $Ly    $Lz)
+    (0      $Ly    $Lz)
+
+    // upper-center block
+    ($x_downstream $Ly    0)
+
+    ($x_downstream $Ly   $Lz)
+    
+    // upper-donwstream block
+    ($Lx       $Ly    0)
+
+    ($Lx       $Ly   $Lz)
+
 );
 
 blocks
 (
-    // upstream-bottom block
+    // bottom-upstream block
     hex (0 1 2 3 4 5 6 7) ($nx $ny $nz) grading (1 1 1)
-    // center-bottom block
+    // bottom-center block
     hex (1 8 9 2 5 10 11 6) ($nx $ny $nz) grading (1 1 1)
-    // donwstream-bottom block
+    // bottom-donwstream- block
     hex (8 12 13 9 10 14 15 11) ($nx $ny $nz) grading (1 1 1)
+    // upper upstream block
+    hex (3 2 16 17 7 6 18 19) ($nx $ny $nz) grading (1 1 1)
+    // upper-center block
+    hex (2 9 20 16 6 11 21 18) ($nx $ny $nz) grading (1 1 1)
+    // upper-donwstream block
+    hex (9 13 22 20 11 15 23 21) ($nx $ny $nz) grading (1 1 1)
 );
 
 edges
@@ -87,12 +113,18 @@ boundary
         type empty;
         faces
         (
+            (0 1 2 3)
             (4 5 6 7)
-            (0 3 2 1)
-            (5 10 11 6)
             (1 8 9 2)
+            (5 10 11 6)
             (8 12 13 9)
             (10 14 15 11)
+            (3 2 16 17)
+            (7 6 18 19)
+            (2 9 20 16)
+            (6 11 21 18)
+            (9 13 22 20)
+            (11 15 23 21)
         );
     }
 
@@ -102,6 +134,7 @@ boundary
         faces
         (
             (0 4 7 3)
+            (3 7 19 17)
         );
     }
 
@@ -110,9 +143,8 @@ boundary
         type patch;
         faces
         (
-            //(2 6 5 1)
-            //(9 11 10 8)
             (13 15 14 12)
+            (22 23 15 13)
         );
     }
 
@@ -121,12 +153,12 @@ boundary
         type patch;
         faces
         (
-            (3 7 6 2)
             (1 5 4 0)
-            (2 6 9 11)
             (5 8 10 1)
-            (9 13 15 11)
             (8 12 14 10)
+            (17 19 18 16)
+            (16 18 20 21)
+            (20 21 22 23)
         );
     }
 );
