@@ -17,7 +17,7 @@ FoamFile
 #include   "blockMeshDict"
 
 // add small infinitesimal to define the searchable box
-box_thickness     0.01;
+box_thickness     0.001;
 
 box_start_x     #eval{ $x_upstream - $box_thickness/2 };
 box_start_y     #eval{ $y_upstream - $box_thickness/2 };
@@ -28,7 +28,7 @@ box_i_y         #eval{ -$sin($alpha) };
 actions
 (
 
-    // extrac face set from rotated box
+    // extract face set from rotated box
     {
         name        plateFaceSet;
         type        faceSet;
@@ -41,7 +41,19 @@ actions
             origin      ($box_start_x $box_start_y $box_start_z);
             e1          ($box_i_x $box_i_y 0);
             e3          (0 0 1);
-            span        ($L $box_thickness $search_z );
+            span        ($L $box_thickness $Lz );
+        }
+    }
+
+    // convert faceSet to to a faceZone
+    {
+        name     plateFaceZone;
+        type     faceZoneSet;
+        action   new;
+        source   setToFaceZone;
+        sourceInfo
+        {
+            faceSet plateFaceSet;
         }
     }
 );

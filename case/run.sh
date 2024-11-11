@@ -5,6 +5,8 @@
 
 runApplication blockMesh
 runApplication topoSet
-runApplication foamToVTK -faceSet plateFaceSet
+# runApplication foamToVTK -faceSet plateFaceSet # to check faceSet
+runApplication createBaffles
+runApplication checkMesh
 
 paraFoam -touch-all

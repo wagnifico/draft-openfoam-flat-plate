@@ -1,0 +1,65 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Whether to convert internal faces only (so leave boundary faces intact).
+// This is only relevant if your face selection type can pick up boundary
+// faces.
+internalFacesOnly true;
+
+// Baffles to create.
+baffles
+{
+    plateBaffle
+    {
+        //- Use predefined faceZone to select faces and orientation.
+        type      faceZone;
+        zoneName  plateFaceZone;
+        patches
+        {
+            master
+            {
+                name            plateTop;
+                type            wall;
+                neighbourPatch  plateBottom;
+                patchFields
+                {
+                    U
+                    {
+                        type            fixedValue;
+                        value           uniform (0 0 0);
+                    }
+                }
+            }
+            slave
+            {
+                name            plateBottom;
+                type            wall;
+                neighbourPatch  plateTop;
+                patchFields
+                {
+                    U
+                    {
+                        type            fixedValue;
+                        value           uniform (0 0 0);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //
