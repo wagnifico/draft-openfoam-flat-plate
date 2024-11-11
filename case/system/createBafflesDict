@@ -41,6 +41,20 @@ baffles
                         type            fixedValue;
                         value           uniform (0 0 0);
                     }
+                    p
+                    {
+                        type            zeroGradient;
+                    }
+                    nuTilda
+                    {
+                        type            fixedValue;
+                        value           uniform 0;
+                    }
+                    nut
+                    {
+                        type            nutUSpaldingWallFunction;
+                        value           uniform 0;
+                    }
                 }
             }
             slave
@@ -54,6 +68,20 @@ baffles
                     {
                         type            fixedValue;
                         value           uniform (0 0 0);
+                    }
+                    p
+                    {
+                        type            zeroGradient;
+                    }
+                    nuTilda
+                    {
+                        type            fixedValue;
+                        value           uniform 0;
+                    }
+                    nut
+                    {
+                        type            nutUSpaldingWallFunction;
+                        value           uniform 0;
                     }
                 }
             }

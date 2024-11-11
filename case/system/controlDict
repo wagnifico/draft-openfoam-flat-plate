@@ -14,19 +14,20 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     simpleFoam;
-startFrom       startTime;
-startTime       0;
-stopAt          endTime;
-endTime         100;
-deltaT          1;
+application       simpleFoam;
+startFrom         startTime;
+startTime         0;
+stopAt            endTime;
+endTime           500;
+deltaT            1;
 
-writeControl    timeStep;
-writeInterval   10;
-purgeWrite      0;
-writeFormat     ascii;
-writePrecision  6;
-writeCompression off;
+writeControl      timeStep;
+writeInterval     50;
+purgeWrite        0;
+writeFormat       ascii;
+writePrecision    6;
+writeCompression  off;
 
+runTimeModifiable true;
 
 // ************************************************************************* //

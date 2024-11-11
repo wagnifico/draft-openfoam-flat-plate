@@ -24,7 +24,7 @@ Ly     3; // domain height
 Lz     1; // domain thickness
 
 // Divisions in x/y/z directions. Can be unequal.
-nx   10;
+nx   20;
 ny   20;
 nz   1;
 
