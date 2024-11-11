@@ -14,4 +14,41 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+ddtSchemes
+{
+    default         steadyState;
+}
+
+gradSchemes
+{
+    default         leastSquares;
+}
+
+divSchemes
+{
+    default         none;
+    div(phi,U)      bounded Gauss linear;
+    div(div(phi,U)) Gauss linear;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         corrected;
+}
+
+oversetInterpolation
+{
+    method          leastSquares;
+}
+
 // ************************************************************************* //

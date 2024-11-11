@@ -1,0 +1,50 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include   "blockMeshDict"
+
+// add small infinitesimal to define the searchable box
+box_thickness     0.01;
+
+box_start_x     #eval{ $x_upstream - $box_thickness/2 };
+box_start_y     #eval{ $y_upstream - $box_thickness/2 };
+box_start_z     #eval{ 0 - $box_thickness/2 };
+box_i_x         #eval{ $cos($alpha) };
+box_i_y         #eval{ -$sin($alpha) };
+
+actions
+(
+
+    // extrac face set from rotated box
+    {
+        name        plateFaceSet;
+        type        faceSet;
+        action      new;
+
+        source      searchableSurfaceToFace;
+        sourceInfo
+        {
+            surfaceType searchableRotatedBox;
+            origin      ($box_start_x $box_start_y $box_start_z);
+            e1          ($box_i_x $box_i_y 0);
+            e3          (0 0 1);
+            span        ($L $box_thickness $search_z );
+        }
+    }
+);
+
+
+// ************************************************************************* //
