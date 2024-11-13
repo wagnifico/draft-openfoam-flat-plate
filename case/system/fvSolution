@@ -20,8 +20,8 @@ solvers
     {
         solver          GAMG;
         tolerance       1e-06;
-        relTol          0.1;
-        smoother        GaussSeidel;
+        relTol          0.01;
+        smoother        DICGaussSeidel;
     }
 
     U
@@ -41,18 +41,35 @@ solvers
         tolerance       1e-08;
         relTol          0.1;
     }
+
+    pFinal
+    {
+        $p;
+        relTol          0;
+    }
+
+    "(U|nuTilda)Final"
+    {
+        $U;
+        relTol          0;
+    }
 }
 
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
-
     residualControl
     {
         p               1e-5;
         U               1e-5;
         nuTilda         1e-5;
     }
+}
+
+PIMPLE
+{
+    nNonOrthogonalCorrectors 0;
+    nCorrectors              2;
 }
 
 relaxationFactors

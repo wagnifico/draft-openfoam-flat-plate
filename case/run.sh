@@ -5,6 +5,16 @@
 
 restore0Dir
 
+mode="pimple"
+while getopts ":m" option; do
+   case $option in
+      h) mode=$OPTARG;;
+     \?) echo "Error: Invalid option"
+         exit;;
+   esac
+done
+
+cp system/$mode/* system
 
 runApplication blockMesh
 runApplication topoSet
