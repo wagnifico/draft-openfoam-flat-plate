@@ -1,0 +1,7 @@
+name: openfoam-flate-plate
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11.6
+  - pyvista
