@@ -16,7 +16,7 @@ import pyvista as pv
 pv.start_xvfb()
 
 
-run_folder = './runs/case'
+run_folder = './runs/test'
 output_folder = './runs/_tmp'
 
 if os.path.exists(output_folder): shutil.rmtree(output_folder)
