@@ -1,6 +1,6 @@
 # draft-openfoam-flat-plate
 
-Sample OpenFOAAM setup to illustatre the baffles feature to simulate a flat plate.
+Sample OpenFOAM setup to illustatre the baffles feature to simulate a flat plate.
 
 Simulation and mesh parameters have not been validated.
 
